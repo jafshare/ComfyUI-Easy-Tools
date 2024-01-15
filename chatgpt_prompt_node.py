@@ -16,13 +16,13 @@ default_system_prompt = """\
 - 主题是图像的主要焦点，如角色或场景。对主题进行详细描述可以确保图像丰富而详细。增加主题的权重以增强其清晰度。对于角色，描述面部、头发、身体、服装、姿势等特征。
 - 场景描述环境。没有场景，图像的背景是平淡的，主题显得过大。某些主题本身包含场景（例如建筑物、风景）。像 " 花草草地 "、" 阳光 "、" 河流 " 这样的环境词可以丰富场景。你的任务是设计图像生成的提示。请按照以下步骤进行操作：
 
-1. 我会发送给您一个图像场景。你需要根据我的提示生成详细的图像描述，输出为 json 格式的数据， description 字段是详细图像描述。
-2. 根据图像设计 Positive Prompt，并添加质量标签以创建标准提示。输出为 positivePrompt , 并提供中文版的 positivePromptTranslate。
-3. 设计 Negative Prompt，即图像中要避免的元素，创建标准的稳定扩散提示（英文），输出为 negativePrompt, 并提供中文版的 negativePromptTranslate。
+1. 我会发送给您一个图像场景。你需要根据我的提示生成详细的图像描述，输出为 json 格式的数据，description 字段是详细图像描述。
+2. 根据图像设计 Positive Prompt，并添加质量标签以创建标准提示。输出为 positivePrompt 
+3. 设计 Negative Prompt，即图像中要避免的元素，创建标准的稳定扩散提示（英文），输出为 negativePrompt
 
 返回的数据格式必须满足以下条件:
 - 严格的 json 格式
-- 包含 description 、positivePrompt、positivePromptTranslate、negativePrompt、negativePromptTranslate 五个字段
+- 包含 description 、positivePrompt、negativePrompt 三个字段
 - 不要返回和返回数据无关的问候、提示以及其他信息
 """
 request_example = "二战时期的护士"
@@ -31,9 +31,7 @@ response_example = """\
 {
 	"description":"一个穿着德国制服的二战时期的护士，手持一瓶葡萄酒和听诊器，穿着白色服装坐在一张桌子旁边，背景是一张桌子。",
 	"positivePrompt":"A WWII-era nurse in a German uniform, holding a wine bottle and stethoscope, sitting at a table in white attire, with a table in the background, masterpiece, best quality, 8k, illustration style, best lighting, depth of field, detailed character, detailed environment.",
-	"positivePromptTranslate":"一位穿着德国制服的二战时期的护士，手持一瓶葡萄酒和听诊器，穿着白色服装坐在一张桌子旁边，背景是一张桌子，画作具有杰出的艺术水平，最佳画质，8K分辨率，采用插画风格，最佳光线和景深，角色和环境都展现出精细的细节。",
-	"negativePrompt": "Cartoon, 3D, disfigured, bad art, deformed, extra limbs, close-up, black and white, weird colors, blurry, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, out of frame, ugly, extra limbs, bad anatomy, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, mutated hands, fused fingers, too many fingers, long neck, Photoshop, video game, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, mutation, mutated, extra limbs, extra legs, extra arms, disfigured, deformed, cross-eyed, body out of frame, blurry, bad art, bad anatomy, 3D render, watermark, logo",
-	"negativePromptTranslate":"卡通，3D，畸形，糟糕的艺术，变形，额外的肢体，特写，黑白，奇怪的颜色，模糊，重复，病态，残缺，超出画框，额外的手指，变异的手，画得差劲的手，画得差劲的脸，突变，畸形，丑陋，模糊，不良解剖结构，不良比例，额外的肢体，克隆的脸，畸形，超出画框，丑陋，额外的肢体，不良解剖结构，恶心的比例，畸形的肢体，缺失的手臂，缺失的腿，额外的胳膊，额外的腿，变异的手，融合的手指，手指过多，颈部过长，Photoshop，视频游戏，丑陋，瓦片状，画得差劲的手，画得差劲的脚，画得差劲的脸，超出画框，突变，变异，额外的肢体，额外的腿，额外的胳膊，畸形，糟糕的解剖结构，3D渲染，水印，logo"
+	"negativePrompt": "Cartoon, 3D, disfigured, bad art, deformed, extra limbs, close-up, black and white, weird colors, blurry, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, ugly, blurry, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, out of frame, ugly, extra limbs, bad anatomy, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, mutated hands, fused fingers, too many fingers, long neck, Photoshop, video game, ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, mutation, mutated, extra limbs, extra legs, extra arms, disfigured, deformed, cross-eyed, body out of frame, blurry, bad art, bad anatomy, 3D render, watermark, logo"
 }
 ```
 """
@@ -76,52 +74,11 @@ def parse_data(raw_text: str) -> any:
 
 
 class ChatGPTPrompt:
-    """
-    A example node
-
-    Class methods
-    -------------
-    INPUT_TYPES (dict):
-        Tell the main program input parameters of nodes.
-
-    Attributes
-    ----------
-    RETURN_TYPES (`tuple`):
-        The type of each element in the output tulple.
-    RETURN_NAMES (`tuple`):
-        Optional: The name of each output in the output tulple.
-    FUNCTION (`str`):
-        The name of the entry-point method. For example, if `FUNCTION = "execute"` then it will run Example().execute()
-    OUTPUT_NODE ([`bool`]):
-        If this node is an output node that outputs a result/image from the graph. The SaveImage node is an example.
-        The backend iterates on these output nodes and tries to execute all their parents if their parent graph is properly connected.
-        Assumed to be False if not present.
-    CATEGORY (`str`):
-        The category the node should appear in the UI.
-    execute(s) -> tuple || None:
-        The entry point method. The name of this method must be the same as the value of property `FUNCTION`.
-        For example, if `FUNCTION = "execute"` then this method's name must be `execute`, if `FUNCTION = "foo"` then it must be `foo`.
-    """
-
     def __init__(self):
         pass
 
     @classmethod
     def INPUT_TYPES(s):
-        """
-        Return a dictionary which contains config for all input fields.
-        Some types (string): "MODEL", "VAE", "CLIP", "CONDITIONING", "LATENT", "IMAGE", "INT", "STRING", "FLOAT".
-        Input types "INT", "STRING" or "FLOAT" are special values for fields on the node.
-        The type can be a list for selection.
-
-        Returns: `dict`:
-            - Key input_fields_group (`string`): Can be either required, hidden or optional. A node class must have property `required`
-            - Value input_fields (`dict`): Contains input fields config:
-                * Key field_name (`string`): Name of a entry-point method's argument
-                * Value field_config (`tuple`):
-                    + First value is a string indicate the type of field or a list for selection.
-                    + Secound value is a config for type "INT", "STRING" or "FLOAT".
-        """
         return {
             "required": {
                 "model": (
@@ -139,13 +96,11 @@ class ChatGPTPrompt:
             },
         }
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_TYPES = ("STRING", "STRING", "STRING")
     RETURN_NAMES = (
         "description",
         "positive_prompt",
         "negative_prompt",
-        "positive_prompt_translate",
-        "negative_prompt_translate",
     )
 
     FUNCTION = "execute"
@@ -162,7 +117,7 @@ class ChatGPTPrompt:
     ):
         if not user_prompt:
             # 不处理空数据
-            return ("", "", "", "", "")
+            return ("", "", "")
 
         # TODO 返回上一次的值
         # if control_after_generate == "fixed":
@@ -188,8 +143,6 @@ class ChatGPTPrompt:
             data["description"],
             data["positivePrompt"],
             data["negativePrompt"],
-            data["positivePromptTranslate"],
-            data["negativePromptTranslate"],
         )
 
     def _send_message(
@@ -231,4 +184,4 @@ class ChatGPTPrompt:
 NODE_CLASS_MAPPINGS = {"ChatGPTPrompt": ChatGPTPrompt}
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
-NODE_DISPLAY_NAME_MAPPINGS = {"ChatGPTPrompt": "ChatGPT提示词"}
+NODE_DISPLAY_NAME_MAPPINGS = {"ChatGPTPrompt": "ChatGPT Prompt"}
