@@ -34,14 +34,14 @@
 
 #### 快速使用
 
-> [!tip] 可直接下载图片，拖拽到 ComfyUI 中使用
+> [!note] 可直接下载图片，拖拽到 ComfyUI 中使用
 
 ![1girl](./example/1girl.png)
 
 ## 更新日志
 
-- **2024/1/15**: 去掉不必要的 **positivePromptTranslate** 、 **negativePromptTranslate** 的输出，以提高 ChatGPT 生成速度(预计可以提高一倍)
-- **2024/1/14**: 完成基本的 **ChatGPT Prompt** 节点
+- **v0.0.2(2024/1/15)**: 去掉不必要的 **positivePromptTranslate** 、 **negativePromptTranslate** 的输出，以提高 ChatGPT 生成速度(预计可以提高一倍)
+- **v0.0.1(2024/1/14)**: 完成基本的 **ChatGPT Prompt** 节点
 
 ## 已知问题
 
