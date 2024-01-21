@@ -1,8 +1,12 @@
-import { app } from "../../../scripts/app.js";
+// @ts-ignore
+import { app } from "@comfyUI/scripts/app.js";
 // import { $el } from "../../../../scripts/ui.js";
+import { ComfyApp, ComfyExtension } from "@/types/comfyUI";
+const noop = () => {};
+
 const ext = {
   name: "easyTools.chatGPTPrompt",
-  async setup(app) {
+  async setup(app: ComfyApp) {
     // app.ui.settings.addSetting({
     //   id: "EasyTools.ChatGPTPrompt.SystemPrompt",
     //   name: "ChatGPT System Prompt",
@@ -56,13 +60,15 @@ const ext = {
       name: "ChatGPT Base URL",
       defaultValue: "",
       type: "text",
+      onChange: noop,
     });
     app.ui.settings.addSetting({
       id: "EasyTools.ChatGPTPrompt.Token",
       name: "ChatGPT Token",
       defaultValue: "",
       type: "text",
+      onChange: noop,
     });
   },
 };
-app.registerExtension(ext);
+app.registerExtension(ext as ComfyExtension);

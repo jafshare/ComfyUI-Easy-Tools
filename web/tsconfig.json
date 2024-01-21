@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleDetection": "auto",
+    "module": "ESNext",
+    "baseUrl": "./",
+    "paths": {
+      "@comfyUI/*": ["../../../web/*"],
+      "@/*": ["*"]
+    },
+    // "jsx": "preserve",
+    // "jsxFactory": "",
+    // "jsxFragmentFactory": "",
+    // "typeRoots": [],
+    // "types": [],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["types", "src"]
+}

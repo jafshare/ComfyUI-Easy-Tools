@@ -43,12 +43,8 @@ default_messages = [
 
 
 def get_setting():
-    # 获取当前脚本文件的路径
-    current_path = os.path.dirname(os.path.abspath(__file__))
     # 配置的路径
-    setting_file_path = os.path.join(
-        current_path, "..", "..", "user/default/comfy.settings.json"
-    )
+    setting_file_path = os.path.join(os.getcwd(), "user/default/comfy.settings.json")
     try:
         # 打开文件
         with open(setting_file_path, "r") as file:
