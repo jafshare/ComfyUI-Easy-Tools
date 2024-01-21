@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "moduleDetection": "auto",
     "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleDetection": "auto",
     "baseUrl": "./",
     "paths": {
       "@comfyUI/*": ["../../../web/*"],

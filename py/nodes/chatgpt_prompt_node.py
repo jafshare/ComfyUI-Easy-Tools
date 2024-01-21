@@ -103,7 +103,7 @@ class ChatGPTPrompt:
 
     # OUTPUT_NODE = True
 
-    CATEGORY = "Easy Tools"
+    CATEGORY = "EasyTools"
 
     def execute(
         self,

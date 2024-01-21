@@ -1,3 +1,3 @@
-export * from "../../../../web/types/comfy.d";
-export * from "../../../../web/types/litegraph.d";
-export * from "../../../../web/scripts/app";
+export * from "@comfyUI/types/comfy.d";
+export * from "@comfyUI/types/litegraph.d";
+export * from "@comfyUI/scripts/app";
