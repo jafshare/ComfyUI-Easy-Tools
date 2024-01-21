@@ -1,5 +1,5 @@
 // src/nodes/setting/setting.ts
-import { app } from "@comfyUI/scripts/app.js";
+import { app } from "@comfyUI/scripts/app";
 var noop = () => {
 };
 var ext = {

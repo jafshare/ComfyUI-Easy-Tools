@@ -1,5 +1,4 @@
-// @ts-ignore
-import { app } from "@comfyUI/scripts/app.js";
+import { app } from "@comfyUI/scripts/app";
 // import { $el } from "../../../../scripts/ui.js";
 import { ComfyApp, ComfyExtension } from "@/types/comfyUI";
 const noop = () => {};
