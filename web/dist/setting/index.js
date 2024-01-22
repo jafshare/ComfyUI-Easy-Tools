@@ -1,8 +1,7 @@
-// src/nodes/setting/index.ts
 import { app } from "../../../scripts/app.js";
-var noop = () => {
+const noop = () => {
 };
-var ext = {
+const ext = {
   name: "easyTools.chatGPTPrompt",
   async setup(app2) {
     app2.ui.settings.addSetting({

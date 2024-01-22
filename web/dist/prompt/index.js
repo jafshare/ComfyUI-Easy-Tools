@@ -1,19 +1,28 @@
-// src/nodes/prompt/index.ts
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
 import { app } from "../../../scripts/app.js";
 import { ComfyWidgets } from "../../../scripts/widgets.js";
-
-// src/nodes/base/customNode.ts
-var CustomGraphNode = class extends LGraphNode {
-  /**
-   * 序列化组件
-   */
-  serialize_widgets = true;
-  /**
-   * 是否虚拟节点
-   */
-  isVirtualNode = false;
-  constructor(title) {
+import { c as client, j as jsxRuntimeExports, B as Button } from "../vendor-eHVUmlmg.js";
+class CustomGraphNode extends LGraphNode {
+  constructor(title, comfyClass = "") {
     super(title);
+    /**
+     * 用于 comfy 标识调用的 python 类
+     */
+    __publicField(this, "comfyClass");
+    /**
+     * 序列化组件
+     */
+    __publicField(this, "serialize_widgets", true);
+    /**
+     * 是否虚拟节点
+     */
+    __publicField(this, "isVirtualNode", false);
+    this.comfyClass = comfyClass;
     this.properties = {
       // 初始化标识
       //@ts-ignore
@@ -36,24 +45,37 @@ var CustomGraphNode = class extends LGraphNode {
       pos: [serialized.pos[0], serialized.pos[1]]
     };
   }
-};
-
-// src/nodes/prompt/index.ts
+}
+const rootDom = document.createElement("div");
+document.body.appendChild(rootDom);
+client.createRoot(rootDom).render(
+  /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Button,
+    {
+      className: "TestButton",
+      style: { position: "absolute", left: 0, bottom: 0, zIndex: 991999 },
+      children: "test22233312312333"
+    }
+  )
+);
 app.registerExtension({
   name: "easyTools.presetPrompt",
   registerCustomNodes(app2) {
     class PresetPrompt extends CustomGraphNode {
-      color = LGraphCanvas.node_colors.yellow.color;
-      bgcolor = LGraphCanvas.node_colors.yellow.bgcolor;
-      groupcolor = LGraphCanvas.node_colors.yellow.groupcolor;
       constructor() {
-        super("Preset Prompt");
+        super("Preset Prompt", "CR Prompt Text");
+        __publicField(this, "color", LGraphCanvas.node_colors.yellow.color);
+        __publicField(this, "bgcolor", LGraphCanvas.node_colors.yellow.bgcolor);
+        __publicField(this, "groupcolor", LGraphCanvas.node_colors.yellow.groupcolor);
         ComfyWidgets.STRING(
           this,
           "prompt",
           ["", { default: "", multiline: true }],
           app2
         );
+        this.addWidget("button", "open preset", "", () => {
+          console.log(">>>onClick:");
+        });
         this.addOutput("prompt", "STRING");
       }
     }

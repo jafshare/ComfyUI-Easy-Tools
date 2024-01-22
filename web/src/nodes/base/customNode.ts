@@ -7,6 +7,10 @@ import type {
 
 export class CustomGraphNode extends LGraphNode {
   /**
+   * 用于 comfy 标识调用的 python 类
+   */
+  comfyClass: string;
+  /**
    * 序列化组件
    */
   serialize_widgets = true;
@@ -14,8 +18,9 @@ export class CustomGraphNode extends LGraphNode {
    * 是否虚拟节点
    */
   isVirtualNode = false;
-  constructor(title: string) {
+  constructor(title: string, comfyClass: string = "") {
     super(title);
+    this.comfyClass = comfyClass;
     this.properties = {
       // 初始化标识
       //@ts-ignore
