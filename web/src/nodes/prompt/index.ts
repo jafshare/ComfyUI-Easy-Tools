@@ -3,6 +3,7 @@ import type { ComfyExtension } from "@/types/comfyUI";
 import { ComfyWidgets } from "@comfyUI/scripts/widgets";
 import { CustomGraphNode } from "../base/customNode";
 import "./main";
+import { usePresetStore } from "./store";
 app.registerExtension({
   name: "easyTools.presetPrompt",
   registerCustomNodes(app) {
@@ -13,14 +14,31 @@ app.registerExtension({
       constructor() {
         // TODO 暂时用 CR Prompt Text 节点模拟
         super("Preset Prompt", "CR Prompt Text");
-        ComfyWidgets.STRING(
+        const widget = ComfyWidgets.STRING(
           this,
           "prompt",
           ["", { default: "", multiline: true }],
           app
         );
         this.addWidget("button", "open preset", "", () => {
-          console.log(">>>onClick:");
+          const { openPreset, updateTags } = usePresetStore.getState();
+          // 获取默认值
+          const rawPrompts = widget.widget.value as string;
+          updateTags(
+            rawPrompts
+              .split(/[,，]+/)
+              .map((item) => item.trim())
+              .filter((item) => item)
+          );
+          const unSub = usePresetStore.subscribe((state) => {
+            widget.widget.value = state.tags.join(",");
+            // 关闭后自动取消订阅
+            if (!state.open) {
+              unSub();
+            }
+          });
+          // 打开预设弹窗
+          openPreset();
         });
         this.addOutput("prompt", "STRING");
       }

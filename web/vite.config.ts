@@ -1,6 +1,8 @@
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import UnoCSS from "unocss/vite";
+const ULR_PREFIX = "/extensions/ComfyUI-Easy-Tools";
 // 自动增加后缀
 function formatImportPath(path: string) {
   if (!/[\.](js|ts)$/.test(path)) {
@@ -14,7 +16,6 @@ export default defineConfig({
     // a hacky resolution for reactDOM process is not defined error
     // "process.env.NODE_ENV": '"production"',
   },
-  appType: "custom",
   resolve: {
     alias: {
       "@": path.join(__dirname, "src"),
@@ -83,6 +84,35 @@ export default defineConfig({
         return null;
       },
     },
+    {
+      name: "inline-css",
+      enforce: "pre",
+      generateBundle(_, bundles) {
+        for (const key in bundles) {
+          const bundle = bundles[key];
+          if (
+            bundle.type === "chunk" &&
+            bundle?.viteMetadata?.importedCss.size
+          ) {
+            const cssSet = bundle?.viteMetadata?.importedCss;
+            // 注入style，由于没有生成 index.html 导致css无法自动引入
+            const cssScript = Array.from(cssSet)
+              .map((cssFile) => {
+                return `
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.type = 'text/css';
+          link.href = '${ULR_PREFIX}/${cssFile}';
+          document.head.appendChild(link);
+        `;
+              })
+              .join("\n");
+            bundle.code = bundle.code += "\n" + cssScript;
+          }
+        }
+      },
+    },
+    UnoCSS(),
     react(),
     splitVendorChunkPlugin(),
   ],
